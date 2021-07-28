@@ -1,7 +1,7 @@
 <template>
   <div class="login-wrapper">
     <div class="modal">
-      <el-form ref="userForm"   :model="user" status-icon :rules="rules">
+      <el-form ref="userForm" :model="user" status-icon :rules="rules">
         <div class="title">暴力熊</div>
         <!-- 账号 -->
         <el-form-item prop="userName">
@@ -12,7 +12,7 @@
           />
         </el-form-item>
         <!-- 密码 -->
-         <el-form-item prop="userPwd">
+        <el-form-item prop="userPwd">
           <el-input
             type="password"
             prefix-icon="el-icon-view"
@@ -20,7 +20,7 @@
           />
         </el-form-item>
         <!-- 登录按钮 -->
-         <el-form-item>
+        <el-form-item>
           <el-button type="primary" class="btn-login" @click="login"
             >登录</el-button
           >
@@ -33,7 +33,7 @@
 <script>
 export default {
   name: "login",
-  data() {
+  data () {
     return {
       user: {
         userName: "",
@@ -58,21 +58,22 @@ export default {
     }
   },
   methods: {
-    login() {
-      this.$refs.userForm.validate( async valid=>{
-        if(valid){
+    login () {
+      this.$refs.userForm.validate(async valid => {
+        if (valid) {
           // 校验成功！
-         const res =   await this.$api.login(this.user)
-         //todo:缓存登录信息
-         this.$router.push("/welcome");
-         console.log('%c 🥥 res: ', 'font-size:20px;background-color: #465975;color:#fff;', res);
-        }else{
-            // 校验失败！
+          const res = await this.$api.login(this.user)
+          //todo:缓存登录信息
+          this.$store.commit("saveUserInfo", res);
+          this.$router.push("/welcome");
+          console.log('%c 🥥 res: ', 'font-size:20px;background-color: #465975;color:#fff;', res);
+        } else {
+          // 校验失败！
         }
         console.log('%c 🥩 val: ', 'font-size:20px;background-color: #465975;color:#fff;', valid);
       })
 
-      
+
     }
   },
 }

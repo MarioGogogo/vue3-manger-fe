@@ -9,7 +9,7 @@
           url:"/login",
           method:"post",
           data:params,
-          mock:false
+          mock:true
        })
     }
  }
