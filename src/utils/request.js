@@ -28,7 +28,7 @@ service.interceptors.request.use((req) => {
 // 响应拦截
 service.interceptors.response.use(
   (res) => {
-    console.log('res :>> ', res);
+    console.log('响应拦截 :>> ', res);
     const { code, data, msg } = res.data;
     if (code === 200) {
       return data;

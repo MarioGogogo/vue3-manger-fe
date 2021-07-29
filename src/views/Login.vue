@@ -66,7 +66,7 @@ export default {
           //todo:缓存登录信息
           this.$store.commit("saveUserInfo", res);
           this.$router.push("/welcome");
-          console.log('%c 🥥 res: ', 'font-size:20px;background-color: #465975;color:#fff;', res);
+          console.log('%c 🥥 登录返回结果: ', 'font-size:20px;background-color: #465975;color:#fff;', res);
         } else {
           // 校验失败！
         }

@@ -4,8 +4,8 @@
 const env = import.meta.env.MODE || "prod";
 const EnvConfig = {
     dev:{
-       baseApi:"/",
-       mockApi:'http://yapi.52react.cn/mock/13/hybrid'
+       baseApi:"/api",
+       mockApi:'http://yapi.52react.cn/mock/97/api'
     },
     test:{
       baseApi:"//test.com/api",
