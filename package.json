@@ -7,11 +7,12 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "axios": "^0.21.1",
+    "element-plus": "^1.0.2-beta.62",
     "vue": "^3.0.5",
     "vue-router": "^4.0.10",
-    "vuex": "^4.0.2",
-    "axios": "^0.21.1",
-    "element-plus": "^1.0.2-beta.62"
+    "vue-toastification": "^1.7.11",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.5",

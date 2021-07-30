@@ -556,6 +556,11 @@ vue-router@^4.0.10:
   dependencies:
     "@vue/devtools-api" "^6.0.0-beta.14"
 
+vue-toastification@^1.7.11:
+  version "1.7.11"
+  resolved "https://registry.npmjs.org/vue-toastification/-/vue-toastification-1.7.11.tgz#3e46157b7361f5005b1a60112bc91f5bd00c66d7"
+  integrity sha512-CT/DYttb/VtWDNdhJG0BskLVfveZq5rGOgO/u3qTX+RPQQzX0WSai8VVxxUuvR8UpxfSGPS+JQleR33bo3Vadg==
+
 vue@^3.0.5:
   version "3.1.5"
   resolved "https://registry.npmjs.org/vue/-/vue-3.1.5.tgz#12879b11d0685ee4478c8869551799630a52f9fe"

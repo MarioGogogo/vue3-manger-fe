@@ -21,7 +21,24 @@ const routes = [
         },
         component: Welcome,
       },
-     
+      {
+        name: 'user',
+        path: 'user',
+        meta: {
+          title: '用户管理',
+        },
+        component: () => import('./../views/Welcome.vue'),
+        children: [
+          {
+            name: 'info',
+            path: 'info',
+            meta: {
+              title: '信息统计',
+            },
+            component: () => import('./../views/Welcome.vue')
+          },
+        ],
+      },
     ],
   },
   {
@@ -34,15 +51,9 @@ const routes = [
   },
 ];
 
-
 const router = createRouter({
-     history:createWebHashHistory(),
-     routes
-})
+  history: createWebHashHistory(),
+  routes,
+});
 
-export default router
-
-
-
-
-
+export default router;
