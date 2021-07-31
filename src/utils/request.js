@@ -19,11 +19,13 @@ const service = axios.create({
 
 //请求拦截
 service.interceptors.request.use((req) => {
-  //todo:判断 token
   const headers = req.headers;
   // 请求带上token
-  const { token } = storage.getItem('userInfo');
-  if (!headers.Authorization) headers.Authorization = 'Bearer ' + token;
+  // bug:登录请求不需要带上
+  if(req.url != '/login'){
+    const { token } = storage.getItem('userInfo');
+    if (!headers.Authorization) headers.Authorization = 'Bearer ' + token;
+  }
   return req;
 });
 
