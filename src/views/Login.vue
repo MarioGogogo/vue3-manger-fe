@@ -72,8 +72,6 @@ export default {
         }
         console.log('%c 🥩 val: ', 'font-size:20px;background-color: #465975;color:#fff;', valid);
       })
-
-
     }
   },
 }
