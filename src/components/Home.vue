@@ -30,6 +30,7 @@
           </div>
         </div>
         <div class="user-info">
+          🌈
           <el-badge
             :is-dot="noticeCount > 0 ? true : false"
             class="notice"

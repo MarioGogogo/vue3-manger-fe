@@ -1,33 +1,42 @@
 /**
  * api管理
  */
- import request from './../utils/request'
+import request from './../utils/request';
 
- export default{
-    login(params){
-       return request({
-          url:"/login",
-          method:"post",
-          data:params,
-          mock:false
-       })
-    },
-    //获取消息
-    noticeCount(){
-      return request({
-         url:"/leave/count",
-         method:"get",
-         data:{},
-         mock:false
-      })
-   },
-   //菜单列表
-   getMenuList(params) {
+export default {
+  login(params) {
     return request({
-        url: '/menu/list',
+      url: '/login',
+      method: 'post',
+      data: params,
+      mock: false,
+    });
+  },
+  //获取消息
+  noticeCount() {
+    return request({
+      url: '/leave/count',
+      method: 'get',
+      data: {},
+      mock: false,
+    });
+  },
+  //菜单列表
+  getMenuList(params) {
+    return request({
+      url: '/menu/list',
+      method: 'get',
+      data: params,
+      mock: true,
+    });
+  },
+  //用户管理
+  getUserList(params) {
+    return request({
+        url: '/users/list',
         method: 'get',
         data: params,
-        mock: true
+        mock: true,
     })
 },
- }
+};
