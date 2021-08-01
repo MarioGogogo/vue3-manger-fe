@@ -62,7 +62,7 @@ function request(options) {
   if (options.method.toLowerCase() === 'get') {
     options.params = options.data;
   }
-  //局部请求mock
+  //note:小技巧 学习局部请求mock
   let isMock = config.mock;
   if (typeof options.mock != 'undefined') {
     isMock = options.mock;
