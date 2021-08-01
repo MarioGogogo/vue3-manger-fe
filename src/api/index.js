@@ -51,10 +51,35 @@ export default {
   // 新增用户
   userSubmit(params) {
     return request({
-        url: '/users/operate',
-        method: 'post',
-        data: params,
-        mock: true
-    })
-},
+      url: '/users/operate',
+      method: 'post',
+      data: params,
+      mock: false,
+    });
+  },
+  userDel(params) {
+    return request({
+      url: '/users/delete',
+      method: 'post',
+      data: params,
+    });
+  },
+  getRoleList() {
+    return request({
+      url: '/roles/allList',
+      method: 'get',
+      data: {},
+      mock: true,
+    });
+  },
+ 
+ 
+  menuSubmit(params) {
+    return request({
+      url: '/menu/operate',
+      method: 'post',
+      data: params,
+      mock: false,
+    });
+  },
 };

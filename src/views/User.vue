@@ -195,7 +195,7 @@ export default {
         deptId: [
           {
             required: true,
-            message: "请输入用户邮箱",
+            message: "请输入部门",
             trigger: "blur",
           },
         ],
@@ -302,13 +302,22 @@ export default {
       console.log('%c 🍸   this.checkedUserIds : ', 'font-size:20px;background-color: #B03734;color:#fff;', this.checkedUserIds);
 
     },
-    //todo:编辑
-    handleEdit () {
-
+    // 用户编辑
+    handleEdit (row) {
+      console.log('%c 🍈 row: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', row);
+      this.action = "edit";
+      this.showModal = true;
+      //fix:这里一定要next 否则会有bug 每一次要等初始状态之后才能赋值弹窗
+      this.$nextTick(() => {
+        Object.assign(this.userForm, row);
+      });
     },
-    //todo:删除
-    handleDel () {
-
+    async handleDel (row) {
+      await this.$api.userDel({
+        userIds: [row.userId], //可单个删除，也可批量删除
+      });
+      this.$message.success("删除成功");
+      this.getUserList();
     },
     //新增
     handleCreate () {
@@ -317,7 +326,20 @@ export default {
     },
     //todo:批量删除
 
-    handlePatchDel () {
+    async handlePatchDel (row) {
+      if (this.checkedUserIds.length == 0) {
+        this.$message.error("请选择要删除的用户");
+        return;
+      }
+      const res = await this.$api.userDel({
+        userIds: this.checkedUserIds, //可单个删除，也可批量删除
+      });
+      if (res.nModified > 0) {
+        this.$message.success("删除成功");
+        this.getUserList();
+      } else {
+        this.$message.success("修改失败");
+      }
 
     },
     handleCurrentChange (current) {
@@ -338,15 +360,23 @@ export default {
           this.handleReset("dialogForm");
           this.getUserList();
         }
-     })
+      })
+    },
+    //关闭
+    handleClose () {
+      this.showModal = false;
+      //重置
+      this.handleReset("dialogForm");
+    }
   },
-  //关闭
-  handleClose () {
-    this.showModal = false;
-    //重置
-    this.handleReset("dialogForm");
+  watch: {
+    showModal () {
+      if (!this.showModal) {
+        console.log('关闭了 :>> ');
+        this.handleReset("dialogForm");
+      }
+    }
   }
-},
 }
 </script>
 
