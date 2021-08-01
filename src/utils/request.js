@@ -21,7 +21,6 @@ const service = axios.create({
 service.interceptors.request.use((req) => {
   const headers = req.headers;
   // 请求带上token
-  // bug:登录请求不需要带上
   if(req.url != '/login'){
     const { token } = storage.getItem('userInfo');
     if (!headers.Authorization) headers.Authorization = 'Bearer ' + token;

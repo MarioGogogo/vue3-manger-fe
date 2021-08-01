@@ -33,10 +33,28 @@ export default {
   //用户管理
   getUserList(params) {
     return request({
-        url: '/users/list',
-        method: 'get',
+      url: '/users/list',
+      method: 'get',
+      data: params,
+      mock: true,
+    });
+  },
+  //获取部门
+  getDeptList() {
+    return request({
+      url: '/dept/list',
+      method: 'get',
+      data: {},
+      mock: true,
+    });
+  },
+  // 新增用户
+  userSubmit(params) {
+    return request({
+        url: '/users/operate',
+        method: 'post',
         data: params,
-        mock: true,
+        mock: true
     })
 },
 };

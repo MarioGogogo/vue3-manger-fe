@@ -119,7 +119,7 @@
             v-model="userForm.deptId"
             placeholder="请选择所属部门"
             :options="deptList"
-            :props="{ checkStrictly: true, value: '_id', label: 'deptName' }"
+            :props="deptListProps"
             clearable
             style="width: 100%"
           ></el-cascader>
@@ -146,6 +146,7 @@ export default {
   data () {
     return {
       showModal: false,
+      action: "",
       user: {
         userId: "",
         userName: "",
@@ -154,6 +155,12 @@ export default {
       userList: [],
       roleList: [], //系统角色
       deptList: [], //部门
+      checkedUserIds: [],
+      deptListProps: {
+        checkStrictly: true,
+        value: '_id',
+        label: 'deptName'
+      },
       pager: {
         pageNum: 1,
         pageSize: 10,  //每页10条
@@ -247,47 +254,69 @@ export default {
     }
   },
   mounted () {
+    //请求用户列表
     this.getUserList()
+    this.getDeptList()
     this.roleList = [{ _id: "001", roleName: "总监" }, { _id: "002", roleName: "JAVA" }, { _id: "003", roleName: "运营" },];
   },
   methods: {
+    //获取部门列表
+    async getDeptList () {
+      let list = await this.$api.getDeptList();
+      console.log('%c 🍬 部门列表: ', 'font-size:20px;background-color: #465975;color:#fff;', list);
+      this.deptList = list;
+    },
     async getUserList () {
-      const params = {
-        userId: "001",
-        userName: "admin",
-        state: this.user.state,
-        pageNum: this.pager.pageNum,
-        pageSize:this.pager.pageSize
-      }
+      // const params = {
+      //   userId: this.user.userId,
+      //   userName: this.user.userName,
+      //   state: this.user.state,
+      //   pageNum: this.pager.pageNum,
+      //   pageSize: this.pager.pageSize
+      // }
+      const params = { ...this.user, ...this.pager }
       try {
-         const {list,page} = await this.$api.getUserList(params)
-      console.log('%c 🍠 page: ', 'font-size:20px;background-color: #6EC1C2;color:#fff;', page);
-      this.userList = list
-      this.pager.total = +page.total
+        const { list, page } = await this.$api.getUserList(params)
+        console.log('%c 🍠 page: ', 'font-size:20px;background-color: #6EC1C2;color:#fff;', page);
+        this.userList = list
+        this.pager.total = +page.total
       } catch (error) {
-        console.log('getUserList-error',error);
+        console.log('getUserList-error', error);
       }
-     
+
     },
+    //查询
     handleQuery () {
+      this.getUserList();
+    },
+    // 重置
+    handleReset (form) {
+      this.$refs[form].resetFields();
+    },
+    handleSelectionChange (list) {
+      let arr = [];
+      list.map((item) => {
+        arr.push(item.userId);
+      });
+      this.checkedUserIds = arr;
+      console.log('%c 🍸   this.checkedUserIds : ', 'font-size:20px;background-color: #B03734;color:#fff;', this.checkedUserIds);
 
     },
-    handleReset () {
-
-    },
-    handleSelectionChange () {
-
-    },
+    //todo:编辑
     handleEdit () {
 
     },
+    //todo:删除
     handleDel () {
 
     },
     //新增
     handleCreate () {
+      this.action = "add"
       this.showModal = true
     },
+    //todo:批量删除
+
     handlePatchDel () {
 
     },
@@ -295,15 +324,36 @@ export default {
       this.pager.pageNum = current;
       this.getUserList();
     },
-    handleSubmit () {
+    //提交
+    async handleSubmit () {
       this.$refs.dialogForm.validate(async (valid) => {
         console.log('%c 🍢 valid: ', 'font-size:20px;background-color: #42b983;color:#fff;', valid);
-
-      })
-    }
+        if (valid) {
+          let params = this.userForm
+          params.userEmail += "@imooc.com";
+          params.action = this.action;
+          let res = await this.$api.userSubmit(params);
+          this.showModal = false;
+          this.$message.success("用户创建成功");
+          this.handleReset("dialogForm");
+          this.getUserList();
+        }
+     })
   },
+  //关闭
+  handleClose () {
+    this.showModal = false;
+    //重置
+    this.handleReset("dialogForm");
+  }
+},
 }
 </script>
 
 <style lang="scss" scoped>
+.input-with-select {
+  .el-input-group__prepend {
+    background-color: rgb(212, 40, 40);
+  }
+}
 </style>

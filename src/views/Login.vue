@@ -63,7 +63,6 @@ export default {
         if (valid) {
           // 校验成功！
           const res = await this.$api.login(this.user)
-          //todo:缓存登录信息
           this.$store.commit("saveUserInfo", res);
           this.$router.push("/welcome");
           console.log('%c 🥥 登录返回结果: ', 'font-size:20px;background-color: #465975;color:#fff;', res);
