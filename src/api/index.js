@@ -73,13 +73,13 @@ export default {
     });
   },
  
- 
+  // 菜单创建 编辑 删除 三合一
   menuSubmit(params) {
     return request({
       url: '/menu/operate',
       method: 'post',
       data: params,
-      mock: false,
+      mock: true,
     });
   },
 };

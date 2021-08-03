@@ -21,7 +21,7 @@
         </el-form-item>
         <!-- 登录按钮 -->
         <el-form-item>
-          <el-button type="primary" class="btn-login" @click="login"
+          <el-button type="primary" class="btn-login" :loading="loading" @click="login"
             >登录</el-button
           >
         </el-form-item>
@@ -35,6 +35,7 @@ export default {
   name: "login",
   data () {
     return {
+      loading:false,
       user: {
         userName: "",
         userPwd: "",
@@ -59,13 +60,24 @@ export default {
   },
   methods: {
     login () {
+      
       this.$refs.userForm.validate(async valid => {
         if (valid) {
           // 校验成功！
-          const res = await this.$api.login(this.user)
-          this.$store.commit("saveUserInfo", res);
-          this.$router.push("/welcome");
-          console.log('%c 🥥 登录返回结果: ', 'font-size:20px;background-color: #465975;color:#fff;', res);
+          this.loading = true
+          try {
+            const res = await this.$api.login(this.user)
+            this.loading = false
+            if (res === undefined) {
+              return  // this.$message.error("网络请求异常，请稍后再试");
+             } 
+              this.$store.commit("saveUserInfo", res);
+              this.$router.push("/welcome");
+          } catch (error) {
+            this.$message.error(error);
+             this.loading = false
+          }
+
         } else {
           // 校验失败！
         }
