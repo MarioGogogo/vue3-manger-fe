@@ -29,7 +29,7 @@ export default {
   props: {
     userMenu: {
       type: Array,
-      default() {
+      default:()=> {
         return [];
       },
     },

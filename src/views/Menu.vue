@@ -233,8 +233,9 @@ export default {
     // 菜单列表初始化
     async getMenuList () {
       try {
-        let list = await this.$api.getMenuList(this.queryForm);
-        this.menuList = list;
+        let res = await this.$api.getMenuList(this.queryForm);
+        console.log('%c 🍉 list: ', 'font-size:20px;background-color: #FCA650;color:#fff;', res);
+        this.menuList = res
       } catch (error) {
         console.log('getMenuList-error :>> ', error);
       }
@@ -249,7 +250,7 @@ export default {
       this.action = "add";
       if (type == 2) {
         this.menuForm.parentId = [...row.parentId, row._id].filter(
-          (item) => item
+          (item) => itemuserMenu
         );
       }
 

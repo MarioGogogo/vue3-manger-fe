@@ -27,7 +27,7 @@ export default {
       url: '/menu/list',
       method: 'get',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
   //用户管理
@@ -79,7 +79,7 @@ export default {
       url: '/menu/operate',
       method: 'post',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
 };

@@ -40,30 +40,27 @@ module.exports = {
   ],
 
   scopes: [{
-      name: '模块1'
+      name: '菜单'
     },
     {
-      name: '模块2'
+      name: '登录'
     },
     {
-      name: '模块3'
+      name: '角色'
     },
     {
-      name: '模块4'
+      name: '部门'
+    },
+    {
+      name: '休假'
+    },
+    {
+      name: '待我审批'
+    },
+    {
+      name: '轮子'
     }
   ],
-
-  // it needs to match the value for field type. Eg.: 'fix'
-  /*
-  scopeOverrides: {
-    fix: [
-      {name: 'merge'},
-      {name: 'style'},
-      {name: 'e2eTest'},
-      {name: 'unitTest'}
-    ]
-  },
-  */
   // override the messages, defaults are as follows
   messages: {
     type : '选择一种你的提交类型:',
