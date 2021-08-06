@@ -245,12 +245,11 @@ export default {
     },
     //二种新增方式 判断
     handleAdd (type, row) {
-      console.log('%c 🥫 选中这一行: ', 'font-size:20px;background-color: #4b4b4b;color:#fff;', { ...row });
       this.showModal = true;
       this.action = "add";
       if (type == 2) {
         this.menuForm.parentId = [...row.parentId, row._id].filter(
-          (item) => itemuserMenu
+          (item) => item
         );
       }
 
@@ -259,6 +258,7 @@ export default {
     handleEdit (row) {
       this.showModal = true;
       this.action = "edit";
+      // 在dom更新过后下一个阶段，下一次更新才获取值
       this.$nextTick(() => {
         Object.assign(this.menuForm, row);
       });
