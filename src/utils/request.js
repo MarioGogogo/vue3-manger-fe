@@ -7,7 +7,8 @@ import config from '../config/index.js';
 import { ElMessage } from 'element-plus';
 import router from './../router';
 import storage from './../utils/storage'
-
+import {useToast} from "vue-toastification";
+const toast = useToast()
 const TOKEN_INVALID = 'Token认证失败，请重新登录';
 const NETWORK_ERROR = '网络请求异常，请稍后重试';
 const TIME_OUT  = "请求超时，请稍后重试"
@@ -36,18 +37,22 @@ service.interceptors.response.use(
     if (code === 200) {
       return data;
     } else if (code === 500001) {
-      ElMessage.error(TOKEN_INVALID);
+      toast.error(TOKEN_INVALID)
+      // ElMessage.error(TOKEN_INVALID);
       setTimeout(() => {
         router.push('/login');
       }, 1500);
       return Promise.reject(TOKEN_INVALID);
     } else {
-      ElMessage.error(msg || NETWORK_ERROR);
+      toast.error(msg || NETWORK_ERROR)
+
+      // ElMessage.error(msg || NETWORK_ERROR);
       return Promise.reject(msg || NETWORK_ERROR);
     }
   },
   (error) => {
-    ElMessage.error(TIME_OUT);
+    toast.error(TIME_OUT)
+    // ElMessage.error(TIME_OUT);
     console.log('%c 🍱 error: ', 'font-size:20px;background-color: #4b4b4b;color:#fff;', error);
     // return Promise.reject(TIME_OUT);
   }
