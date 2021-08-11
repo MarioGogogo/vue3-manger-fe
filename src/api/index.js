@@ -11,25 +11,28 @@ export default {
       //mock:false
     });
   },
+  //消息数量
   noticeCount(params) {
     return request({
-      url: '/leave/count',
+      url: '/leave/noticeCount',
       method: 'get',
       data: {},
       mock: true,
     });
   },
+  //侧边栏菜单
   getMenuList() {
     return request({
-      url: '/menu/list',
+      url: '/menu/getMenuList',
       method: 'get',
       data: {},
       mock: true,
     });
   },
+  //用户列表
   getUserList(params) {
     return request({
-      url: '/users/list',
+      url: '/users/getUserList',
       method: 'get',
       data: params,
       mock: false,
@@ -37,7 +40,7 @@ export default {
   },
   getAllUserList() {
     return request({
-      url: '/users/all/list',
+      url: '/users/all/getAllUserList',
       method: 'get',
       data: {},
       mock: true,
@@ -59,9 +62,10 @@ export default {
       mock: true,
     });
   },
+  // 角色列表
   getRoleList() {
     return request({
-      url: '/roles/list',
+      url: '/roles/getRoleList',
       method: 'get',
       data: {},
       mock: true,
