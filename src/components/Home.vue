@@ -26,7 +26,7 @@
           </div>
           <!-- 面包屑 -->
           <div class="bread">
-             <BreadCrumb /> 
+            <BreadCrumb />
           </div>
         </div>
         <div class="user-info">
@@ -66,8 +66,8 @@ import TreeMenu from "./TreeMenu.vue";
 import BreadCrumb from "./BreadCrumb.vue";
 export default {
   name: "Home",
-  components: { TreeMenu,BreadCrumb },
-  data() {
+  components: { TreeMenu, BreadCrumb },
+  data () {
     return {
       isCollapse: false,
       userInfo: this.$store.state.userInfo,
@@ -76,21 +76,21 @@ export default {
       activeMenu: location.hash.slice(1), //激活菜单 高亮
     };
   },
-  mounted() {
+  mounted () {
     this.getNoticeCount();
     this.getMenuList();
   },
   methods: {
-    toggle() {
+    toggle () {
       this.isCollapse = !this.isCollapse;
     },
-    handleLogout(key) {
+    handleLogout (key) {
       if (key == "email") return;
-      this.$store.commit("saveUserInfo", "");  
+      this.$store.commit("saveUserInfo", "");
       this.userInfo = null;
       this.$router.push("/login");
     },
-    async getNoticeCount() {
+    async getNoticeCount () {
       try {
         const count = await this.$api.noticeCount();
         console.log('%c 🍦 count: ', 'font-size:20px;background-color: #ED9EC7;color:#fff;', count);
@@ -99,7 +99,7 @@ export default {
         console.error(error);
       }
     },
-    async getMenuList() {
+    async getMenuList () {
       try {
         const list = await this.$api.getMenuList();
         console.log('%c 🍞 list: ', 'font-size:20px;background-color: #F5CE50;color:#fff;', list);

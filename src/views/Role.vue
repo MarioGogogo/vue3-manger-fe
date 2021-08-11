@@ -56,11 +56,65 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <el-dialog title="用户新增" v-model="showModal">
+      <el-form
+        ref="dialogForm"
+        :model="roleForm"
+        label-width="100px"
+        :rules="rules"
+      >
+        <el-form-item label="角色名称" prop="roleName">
+          <el-input v-model="roleForm.roleName" placeholder="请输入角色名称" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input
+            type="textarea"
+            :rows="2"
+            v-model="roleForm.remark"
+            placeholder="请输入备注"
+          />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="handleClose">取 消</el-button>
+          <el-button type="primary" @click="handleSubmit">确 定</el-button>
+        </span>
+      </template>
+    </el-dialog>
     <!-- 弹窗内容 -->
+    <el-dialog title="权限设置" v-model="showPermission">
+      <el-form label-width="100px">
+        <el-form-item label="角色名称">
+          {{ curRoleName }}
+        </el-form-item>
+        <!-- 树形 -->
+        <el-form-item label="选择权限">
+          <el-tree
+            ref="permissionTree"
+            :data="menuList"
+            show-checkbox
+            node-key="_id"
+            default-expand-all
+            :props="{ label: 'menuName' }"
+          >
+          </el-tree>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <span class="dialog-footer">
+          <el-button @click="showPermission = false">取 消</el-button>
+          <el-button type="primary" @click="handlePermissionSubmit"
+            >确 定</el-button
+          >
+        </span>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import { nextTick } from '@vue/runtime-core'
 import utils from '../utils/utils'
 export default {
   name: "role",
@@ -124,6 +178,7 @@ export default {
   },
   mounted () {
     this.getRoleList();
+    this.getMenuList()
   },
   methods: {
     // 角色列表初始化
@@ -137,6 +192,32 @@ export default {
         throw new Error(e)
       }
     },
+    // 菜单列表初始化
+    async getMenuList () {
+      try {
+        let list = await this.$api.getMenuList() // { list,page } 解构
+        this.menuList = list
+        this.getActionMap(list)
+      } catch (e) {
+        throw new Error(e)
+      }
+    },
+    getActionMap (list) {
+      let actionMap = {}
+      const deep = (arr) => {
+        while (arr.length) {
+          let item = arr.pop()
+          if (item.children && item.action) {
+            actionMap[item._id] = item.menuName
+          }
+          if (item.children && !item.action) {
+            deep(item.children)
+          }
+        }
+      }
+      deep(JSON.parse(JSON.stringify(list)))
+      this.actionMap = actionMap
+    },
     // 表单重置
     handleRest (form) {
       this.$refs[form].resetFields()
@@ -146,7 +227,18 @@ export default {
       this.action = 'create'
       this.showModal = true
     },
-    handleEdit () {
+    handleClose () {
+      this.handleRest('dialogForm')
+      this.showModal = false
+    },
+    //角色编辑
+    handleEdit (row) {
+      console.log('%c 🥕 列表内容: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', row);
+      this.action = 'edit'
+      this.showModal = true
+     
+    },
+    handleSubmit () {
 
     },
     handleOpenPermission () {
@@ -157,8 +249,22 @@ export default {
     },
     handleCurrentChange () {
 
+    },
+    handlePermissionSubmit () {
+
     }
 
+  },
+  watch: {
+    showModal (n) {
+      if (n) {
+        this.roleForm = {}
+      } else {
+        this.$nextTick(() => {
+          this.roleForm = row
+        })
+      }
+    }
   },
 }
 </script>
