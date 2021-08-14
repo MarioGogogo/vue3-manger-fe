@@ -5,10 +5,10 @@ import request from './../utils/request';
 export default {
   login(params) {
     return request({
-      url: '/users/login',
+      url: '/login',
       method: 'post',
       data: params,
-      //mock:false
+      mock:false
     });
   },
   //消息数量

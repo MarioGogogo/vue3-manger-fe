@@ -82,7 +82,7 @@
         </span>
       </template>
     </el-dialog>
-    <!-- 弹窗内容 -->
+    <!-- 权限弹窗内容 -->
     <el-dialog title="权限设置" v-model="showPermission">
       <el-form label-width="100px">
         <el-form-item label="角色名称">
@@ -227,31 +227,85 @@ export default {
       this.action = 'create'
       this.showModal = true
     },
-    handleClose () {
-      this.handleRest('dialogForm')
-      this.showModal = false
-    },
     //角色编辑
     handleEdit (row) {
       console.log('%c 🥕 列表内容: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', row);
       this.action = 'edit'
       this.showModal = true
-     
+      this.$nextTick(() => {
+        this.roleForm = row
+      })
+
     },
+    // 角色提交
     handleSubmit () {
-
+      this.$refs.dialogForm.validate(async (valid) => {
+        if (valid) {
+          let { roleForm, action } = this // 解构 roleForm, action
+          let params = { ...roleForm, action }
+          let res = await this.$api.roleOperate(params)
+          if (res) {
+            this.showModal = false
+            this.$toast.success('创建成功')
+            this.handleRest('dialogForm')
+            this.getRoleList()
+          }
+        }
+      })
     },
-    handleOpenPermission () {
-
+    // 弹框关闭
+    handleClose () {
+      this.handleRest('dialogForm')
+      this.showModal = false
     },
-    handleDel () {
-
+    handleOpenPermission (row) {
+      this.curRoleId = row._id
+      this.curRoleName = row.roleName
+      this.showPermission = true
+      //获取当前的权限列表
+      let { checkedKeys } = row.permissionList
+      //渲染到树上
+      setTimeout(() => {
+        // checkedKeys 只负责按钮权限
+        this.$refs.permissionTree.setCheckedKeys(checkedKeys)
+      })
+    },
+    // 角色删除
+    async handleDel (_id) {
+      await this.$api.roleOperate({ _id, action: 'delete' })
+      this.$toast.success('删除成功')
+      this.getRoleList()
     },
     handleCurrentChange () {
 
     },
+    // 设置权限提交
     handlePermissionSubmit () {
-
+      //获取当前设置权限
+      let nodes = this.$refs.tree.getCheckedNodes
+      //获取哪些权限选中状态
+      let halfKeys = this.$refs.tree.getHalfCheckedKeys()
+      let checkedKeys = []
+      let parentKeys = []
+      // 遍历权限 是否有子属性 添加checkid
+      nodes.map((node) => {
+        if (!node.children) {
+          checkedKeys.push(node._id)
+        } else {
+          parentKeys.push(node._id)
+        }
+      })
+      let params = {
+        _id: this.curRoleId,
+        permissionList: {
+          checkedKeys,
+          halfCheckedKeys: parentKeys.concat(halfKeys)
+        }
+      }
+      await this.$api.updatePermission(params)
+      this.showPermission = false
+      this.$toast.success('设置成功')
+      this.getRoleList()
     }
 
   },
