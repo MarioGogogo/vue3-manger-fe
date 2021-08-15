@@ -1,0 +1,31 @@
+{
+  "editor.fontLigatures": true,
+  "editor.lineHeight": 22,
+  "editor.letterSpacing": 0.5,
+  "editor.fontWeight": "400",
+  "editor.cursorStyle": "line",
+  "editor.cursorWidth": 5,
+  "editor.cursorBlinking": "solid",
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#fd79a8", //侧边栏背景色
+    "statusBarItem.hoverBackground": "#cc2e48", //选择颜色
+    "statusBar.foreground": "#fff", //侧边栏前景色
+    "activityBar.background": "#fd79a8", //侧边工具栏
+    "activityBar.inactiveForeground": "#fff",
+    "activityBar.foreground": "#e84393", //侧边工具栏图标
+    "titleBar.inactiveBackground": "#fd79a8" //非活动区域的颜色
+  },
+  "workbench.colorTheme": "GitHub Plus",
+  "editor.fontFamily": "Cascadia Code",
+  "editor.fontSize": 14,
+  "editor.tokenColorCustomizations": {
+    "comments": "#da4d83fd" // 注释
+    // "keywords": "#0a0", // 关键字
+    // "variables": "#f00", // 变量名
+    // "strings": "#e2d75dbd", // 字符串
+    // "functions": "#5b99fcc9", // 函数名
+    // "numbers": "#AE81FF" // 数字
+  },
+  "editor.wordWrap": "bounded",
+  "diffEditor.wordWrap": "on"
+}

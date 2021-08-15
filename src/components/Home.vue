@@ -137,6 +137,26 @@ export default {
     .nav-menu {
       height: calc(100vh - 50px);
       border-right: none;
+      .el-submenu {
+        .el-submenu__title {
+          &:hover {
+            background-color: #ee4340 !important;
+            i {
+              color: #fff;
+            }
+          }
+        }
+        .el-menu {
+          .el-menu-item {
+            &:hover {
+              background-color: #ee4340 !important;
+              i {
+                color: #fff;
+              }
+            }
+          }
+        }
+      }
     }
     // 合并
     &.fold {

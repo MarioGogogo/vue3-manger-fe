@@ -71,14 +71,16 @@ export default {
       mock: true,
     });
   },
+  //获取部门列表
   getDeptList() {
     return request({
-      url: '/dept/List',
+      url: '/dept/getDeptList',
       method: 'get',
       data: {},
       mock: true,
     });
   },
+  // 部门操作
   deptDeptOperate(params) {
     return request({
       url: '/dept/operate',
