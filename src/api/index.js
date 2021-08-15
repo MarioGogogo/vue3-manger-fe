@@ -23,7 +23,7 @@ export default {
   //侧边栏菜单
   getMenuList() {
     return request({
-      url: '/menu/getMenuList',
+      url: '/menu/MenuList',
       method: 'get',
       data: {},
       mock: true,
@@ -32,7 +32,7 @@ export default {
   //用户列表
   getUserList(params) {
     return request({
-      url: '/users/getUserList',
+      url: '/users/UserList',
       method: 'get',
       data: params,
       mock: false,
@@ -40,7 +40,7 @@ export default {
   },
   getAllUserList() {
     return request({
-      url: '/users/all/getAllUserList',
+      url: '/users/all/AllUserList',
       method: 'get',
       data: {},
       mock: true,
@@ -48,7 +48,7 @@ export default {
   },
   userDel(params) {
     return request({
-      url: '/users/delete',
+      url: '/users/UserDelete',
       method: 'post',
       data: params,
       // mock:true
@@ -56,7 +56,7 @@ export default {
   },
   getRoleAllList() {
     return request({
-      url: '/roles/allList',
+      url: '/roles/RoleAllList',
       method: 'get',
       data: {},
       mock: true,
@@ -65,7 +65,7 @@ export default {
   // 角色列表
   getRoleList() {
     return request({
-      url: '/roles/getRoleList',
+      url: '/roles/RoleList',
       method: 'get',
       data: {},
       mock: true,
@@ -74,7 +74,7 @@ export default {
   //获取部门列表
   getDeptList() {
     return request({
-      url: '/dept/getDeptList',
+      url: '/dept/DeptList',
       method: 'get',
       data: {},
       mock: true,
@@ -83,7 +83,7 @@ export default {
   // 部门操作
   deptDeptOperate(params) {
     return request({
-      url: '/dept/operate',
+      url: '/dept/DeptOperate',
       method: 'post',
       data: params,
       mock: true,
@@ -91,7 +91,7 @@ export default {
   },
   userSubmit(params) {
     return request({
-      url: '/users/operate',
+      url: '/users/UsersOperate',
       method: 'post',
       data: params,
       mock: false,
@@ -99,7 +99,7 @@ export default {
   },
   menuSubmit(params) {
     return request({
-      url: '/menu/operate',
+      url: '/menu/MenuOperate',
       method: 'post',
       data: params,
       mock: true,
@@ -107,7 +107,7 @@ export default {
   },
   roleOperate(params) {
     return request({
-      url: '/roles/operate',
+      url: '/roles/RolesOperate',
       method: 'post',
       data: params,
       mock: true,
@@ -115,7 +115,7 @@ export default {
   },
   updatePermission(params) {
     return request({
-      url: '/roles/update/permission',
+      url: '/roles/update/UpdatePermission',
       method: 'post',
       data: params,
       mock: true,

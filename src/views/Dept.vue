@@ -22,7 +22,7 @@
       </div>
       <el-table
         :data="deptList"
-        :row-key="_id"
+        row-key="_id"
         :tree-props="{ children: 'children' }"
         stripe
       >
@@ -76,7 +76,7 @@
           <el-select
             placeholder="请选择部门负责人"
             v-model="deptForm.user"
-            @change="handleUser"
+            @change="handleSelectUser"
           >
             <el-option
               v-for="item in userList"
@@ -105,6 +105,7 @@
 </template>
 
 <script>
+import utils from "../utils/utils";
 export default {
   name: "dept",
   data () {
@@ -124,10 +125,16 @@ export default {
         {
           label: '更新时间',
           prop: 'updateTime',
+          formatter (row, column, value) {
+            return utils.formateDate(new Date(value));
+          },
         },
         {
           label: '创建时间',
           prop: 'createTime',
+          formatter (row, column, value) {
+            return utils.formateDate(new Date(value));
+          },
         }
       ],
       deptList: [],
@@ -175,16 +182,22 @@ export default {
         ...this.pager
       })
       this.deptList = list
-      console.log('%c 🥞 list: ', 'font-size:20px;background-color: #4b4b4b;color:#fff;', list);
+    },
+    async getAllUserList () {
+      let list = await this.$api.getAllUserList()
+      this.userList = list
+    },
+    // 选中负责人
+    handleSelectUser (val) {
+      console.log('%c 🍷 选中负责人: ', 'font-size:20px;background-color: #B03734;color:#fff;', val);
+      const [userId, userName, userEmail] = val.split("/")
+      Object.assign(this.deptForm, { userId, userName, userEmail })
     },
     //重置
     handleRest (form) {
       this.$refs[form].resetFields()
     },
-    async getAllUserList () {
-      this.userList = await this.$api.getAllUserList()
-      console.log('%c 🦀 this.userList: ', 'font-size:20px;background-color: #FFDD4D;color:#fff;', this.userList);
-    },
+
     //打开编辑
     handleCreateOpen () {
       this.action = 'create'

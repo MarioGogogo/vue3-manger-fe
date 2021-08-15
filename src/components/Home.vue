@@ -102,7 +102,6 @@ export default {
     async getMenuList () {
       try {
         const list = await this.$api.getMenuList();
-        console.log('%c 🍞 list: ', 'font-size:20px;background-color: #F5CE50;color:#fff;', list);
         this.userMenu = list;
       } catch (error) {
         console.error(error);
