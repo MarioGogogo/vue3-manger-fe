@@ -114,7 +114,6 @@
 </template>
 
 <script>
-import { nextTick } from '@vue/runtime-core'
 import utils from '../utils/utils'
 export default {
   name: "role",
@@ -136,11 +135,13 @@ export default {
         {
           label: '权限列表',
           prop: 'permissionList',
+          width: 200,
           formatter: (row, column, value) => {
             let names = []
             let list = value.halfCheckedKeys || []
             list.map(key => {
-              if (key) names.push(this.actionMap[key])
+              let name = this.actionMap[key]
+              if (key && name) names.push(name)
             })
             return names.join(',')
           }
@@ -184,15 +185,17 @@ export default {
     // 角色列表初始化
     async getRoleList () {
       try {
-        let { list, page } = await this.$api.getRoleList(this.queryForm) // { list,page } 解构
-        console.log('%c 🍖 list, page: ', 'font-size:20px;background-color: #7F2B82;color:#fff;', list, page);
+        let { list, page } = await this.$api.getRoleList({
+          ...this.queryForm,
+          ...this.pager
+        })
         this.roleList = list
         this.pager.total = page.total
       } catch (e) {
         throw new Error(e)
       }
     },
-    // 菜单列表初始化
+    // 菜单权限列表初始化
     async getMenuList () {
       try {
         let list = await this.$api.getMenuList() // { list,page } 解构
@@ -229,11 +232,10 @@ export default {
     },
     //角色编辑
     handleEdit (row) {
-      console.log('%c 🥕 列表内容: ', 'font-size:20px;background-color: #33A5FF;color:#fff;', row);
       this.action = 'edit'
       this.showModal = true
       this.$nextTick(() => {
-        this.roleForm = row
+        this.roleForm = { _id: row._id, roleName: row.roleName, remark: row.remark }
       })
 
     },
@@ -276,15 +278,17 @@ export default {
       this.$toast.success('删除成功')
       this.getRoleList()
     },
-    handleCurrentChange () {
-
+    //分页请求
+    handleCurrentChange (current) {
+      this.pager.pageNum = current
+      this.getRoleList()
     },
     // 设置权限提交
-    handlePermissionSubmit () {
+    async handlePermissionSubmit () {
       //获取当前设置权限
-      let nodes = this.$refs.tree.getCheckedNodes
+      let nodes = this.$refs.permissionTree.getCheckedNodes()
       //获取哪些权限选中状态
-      let halfKeys = this.$refs.tree.getHalfCheckedKeys()
+      let halfKeys = this.$refs.permissionTree.getHalfCheckedKeys()   //选中子菜单   半选中子菜单
       let checkedKeys = []
       let parentKeys = []
       // 遍历权限 是否有子属性 添加checkid

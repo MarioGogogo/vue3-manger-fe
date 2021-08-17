@@ -56,19 +56,19 @@ export default {
   },
   getRoleAllList() {
     return request({
-      url: '/roles/RoleAllList',
+      url: '/roles/roleAllList',
       method: 'get',
       data: {},
-      mock: true,
+      mock: false,
     });
   },
   // 角色列表
-  getRoleList() {
+  getRoleList(params) {
     return request({
-      url: '/roles/RoleList',
+      url: '/roles/roleList',
       method: 'get',
-      data: {},
-      mock: true,
+      data: params,
+      mock: false,
     });
   },
   //获取部门列表
@@ -107,18 +107,18 @@ export default {
   },
   roleOperate(params) {
     return request({
-      url: '/roles/RolesOperate',
+      url: '/roles/roleOperate',
       method: 'post',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
   updatePermission(params) {
     return request({
-      url: '/roles/update/UpdatePermission',
+      url: '/roles/updatePermission',
       method: 'post',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
 };
