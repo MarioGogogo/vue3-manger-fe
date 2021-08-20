@@ -72,21 +72,21 @@ export default {
     });
   },
   //获取部门列表
-  getDeptList() {
+  getDeptList(params) {
     return request({
-      url: '/dept/DeptList',
+      url: '/dept/deptList',
       method: 'get',
-      data: {},
-      mock: true,
+      data: params,
+      mock: false,
     });
   },
   // 部门操作
   deptDeptOperate(params) {
     return request({
-      url: '/dept/DeptOperate',
+      url: '/dept/deptOperate',
       method: 'post',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
   userSubmit(params) {

@@ -144,7 +144,9 @@ export default {
       },
       action: 'create',
       showModal: false,
-      deptForm: {},
+      deptForm: {
+        parentId: [null]
+      },
       userList: [],
       rules: {
         parentId: [
@@ -177,10 +179,7 @@ export default {
   },
   methods: {
     async getDeptList () {
-      let list = await this.$api.getDeptList({
-        ...this.queryForm,
-        ...this.pager
-      })
+      let list = await this.$api.getDeptList(this.queryForm)
       this.deptList = list
     },
     async getAllUserList () {
@@ -230,12 +229,16 @@ export default {
         if (valid) {
           let params = { ...this.deptForm, action: this.action }
           delete params.user
-          let res = await this.$api.deptDeptOperate(params)
-          if (res) {
+          try {
+            await this.$api.deptDeptOperate(params)
             this.$toast.success("操作成功")
-            this.handleClose()
-            this.getDeptList()
+
+          } catch (error) {
+            this.$toast.error("操作失败")
           }
+          this.handleClose()
+          this.getDeptList()
+
         }
       })
     },
