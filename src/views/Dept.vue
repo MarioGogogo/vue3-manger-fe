@@ -196,7 +196,10 @@ export default {
     handleRest (form) {
       this.$refs[form].resetFields()
     },
-
+    handleClose () {
+      this.showModal = false
+      this.handleRest('dialogForm')
+    },
     //打开编辑
     handleCreateOpen () {
       this.action = 'create'
@@ -238,10 +241,16 @@ export default {
           }
           this.handleClose()
           this.getDeptList()
-
         }
       })
     },
+  },
+  watch: {
+    showModal(newVal) {
+       if(!newVal){
+          this.handleClose()
+       }
+    }
   },
 }
 </script>

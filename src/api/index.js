@@ -40,10 +40,10 @@ export default {
   },
   getAllUserList() {
     return request({
-      url: '/users/all/AllUserList',
+      url: '/users/allUserList',
       method: 'get',
       data: {},
-      mock: true,
+      mock: false,
     });
   },
   userDel(params) {
@@ -121,4 +121,13 @@ export default {
       mock: false,
     });
   },
+  //休假列表
+  getApplyList(params){
+    return request({
+      url: '/leave/leaveList',
+      method: 'get',
+      data: params,
+      mock: true,
+    });
+  }
 };

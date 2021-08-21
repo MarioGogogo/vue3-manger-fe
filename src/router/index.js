@@ -1,5 +1,7 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '@/components/Home.vue';
+import storage from '../utils/storage';
+import api from '../api';
 
 const routes = [
   {
@@ -51,6 +53,14 @@ const routes = [
         },
         component: () => import('@/views/Dept.vue'),
       },
+      {
+        name: 'leave',
+        path: '/audit/leave',
+        meta: {
+          title: '休假申请',
+        },
+        component: () => import('@/views/Leave.vue'),
+      }
     ],
   },
   {
@@ -75,6 +85,28 @@ const router = createRouter({
   routes,
 });
 
+async function loadAsyncRoutes() {
+  return;
+  let userInfo = storage.getItem('userInfo') || {};
+  if (userInfo.token) {
+    try {
+      const { menuList } = await API.getPermissionList();
+      let routes = utils.generateRoute(menuList);
+      routes.map((route) => {
+        let url = `./../views/${route.component}.vue`;
+        route.component = () => import(url);
+        router.addRoutes('home', route);
+      });
+    } catch (error) {
+      console.log(
+        '%c 🍎 动态路径: ',
+        'font-size:20px;background-color: #4b4b4b;color:#fff;',
+        error
+      );
+    }
+  }
+}
+// await loadAsyncRoutes()
 // 导航守卫
 router.beforeEach((to, from, next) => {
   //判断当前路由是否存在
