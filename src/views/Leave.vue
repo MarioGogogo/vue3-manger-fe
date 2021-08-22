@@ -1,7 +1,7 @@
 <!--
  * @Author: MarioGo
  * @Date: 2021-08-21 21:44:34
- * @LastEditTime: 2021-08-22 10:39:36
+ * @LastEditTime: 2021-08-22 22:12:54
  * @LastEditors: MarioGo
  * @Description: 审批
  * @FilePath: /manager-fe/src/views/Leave.vue
@@ -49,7 +49,11 @@
             <el-button @click="handleEdit(scope.row)" size="mini"
               >查看</el-button
             >
-            <el-button type="danger" size="mini" @click="handleDel(scope.row)"
+            <el-button
+              type="danger"
+              size="mini"
+              @click="handleDel(scope.row)"
+              v-if="scope.row.applyState === 1 || scope.row.applyState === 2"
               >作废</el-button
             >
           </template>
@@ -125,6 +129,37 @@
         </span>
       </template>
     </el-dialog>
+    <!-- 步骤弹窗 -->
+    <el-dialog title="申请休假详情" v-model="showDetailModal" width="50%">
+      <el-steps
+        :active="detail.applyState > 2 ? 3 : detail.applyState"
+        align-center
+      >
+        <el-step title="待审批"></el-step>
+        <el-step title="审批中"></el-step>
+        <el-step title="审批拒绝/通过"></el-step>
+      </el-steps>
+      <el-form label-width="120px" label-suffix=":">
+        <el-form-item label="休假类型">
+          <div>{{ detail.applyTypeName }}</div>
+        </el-form-item>
+        <el-form-item label="休假时间">
+          <div>{{ detail.time }}</div>
+        </el-form-item>
+        <el-form-item label="休假时长">
+          <div>{{ detail.leaveTime }}</div>
+        </el-form-item>
+        <el-form-item label="休假原因">
+          <div>{{ detail.reasons }}</div>
+        </el-form-item>
+        <el-form-item label="审批状态">
+          <div>{{ detail.applyStateName }}</div>
+        </el-form-item>
+        <el-form-item label="审批人">
+          <div>{{ detail.auditUsers }}</div>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -136,6 +171,7 @@ export default {
     return {
       applyList: [],
       showModal: false,
+      showDetailModal: false,
       queryForm: {
         applyState: 0 // 1 待审批 2 审批中 3 审批拒绝 4 审批通过 5 作废
       },
@@ -216,6 +252,9 @@ export default {
         leaveTime: '0天',
         reasons: ""
       },
+      detail: {
+
+      },
       rules: {
         applyType: [
           {
@@ -256,18 +295,19 @@ export default {
 
     },
     //日期选择
-    handleDateChange(key,value){
-      let {startTime,endTime} = this.leaveForm
-      if(!startTime || !endTime) return
-      if(startTime > endTime){
+    handleDateChange (key, value) {
+      let { startTime, endTime } = this.leaveForm
+      if (!startTime || !endTime) return
+      if (startTime > endTime) {
         this.$toast.error('初始时间不能大于结束日期')
         this.leaveForm.leaveTime = "0天"
         setTimeout(() => {
-           this.leaveForm[key] = ""
+          this.leaveForm[key] = ""
         }, 400);
-       
-      }else{
-         this.leaveForm.leaveTime = (endTime - startTime) / (24*60*60*1000) +1+ "天"
+      } else {
+        //计算时长
+        console.log('%c 🍡 计算时长: ', 'font-size:20px;background-color: #93C0A4;color:#fff;');
+        this.leaveForm.leaveTime = (endTime - startTime) / (24 * 60 * 60 * 1000) + 1 + "天"
       }
     },
     //创建
@@ -286,13 +326,39 @@ export default {
 
     },
     //查看
-    handleEdit () {
+    handleEdit (row) {
+      this.showDetailModal = true
+      let data = { ...row }
 
+      this.detail.applyTypeName = {
+        1: "事假",
+        2: "调休",
+        3: "年假",
+      }[data.applyType]
+      this.detail.time = (utils.formateDate(new Date(data.startTime), 'yyyy-MM-dd') + "到" + utils.formateDate(new Date(data.endTime), 'yyyy-MM-dd'))
+      this.detail.leaveTime = data.leaveTime
+      this.detail.reasons = data.reasons
+      this.detail.applyState = data.applyState
+      this.detail.applyStateName = {
+        1: "待审批",
+        2: "审批中",
+        3: "审批拒绝",
+        4: "审批通过",
+        5: "作废",
+      }[data.applyState];
+      this.detail.auditUsers = data.auditUsers || ""
     },
-    //删除
-    handleDel () {
+    //作废
+    async handleDel (row) {
       this.action = "delete"
-
+      try {
+        let id = row._id
+        await this.$api.leaveOperate({ _id: id, action: this.action })
+        this.$toast.success('操作成功')
+      } catch (error) {
+        this.$toast.error('操作失败')
+      }
+      this.getLeaveList()
     },
     //分页
     handleCurrentChange () {
@@ -313,8 +379,6 @@ export default {
           this.$toast.success('创建成功')
           this.handleClose()
           this.getLeaveList()
-        } else {
-          this.$toast.error('创建失败')
         }
       })
     }

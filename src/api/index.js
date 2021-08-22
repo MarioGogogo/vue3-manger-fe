@@ -127,7 +127,7 @@ export default {
       url: '/leave/leaveList',
       method: 'get',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
   leaveOperate(params){
@@ -135,7 +135,7 @@ export default {
       url: '/leave/leaveOperate',
       method: 'post',
       data: params,
-      mock: true,
+      mock: false,
     });
   }
 };
