@@ -1,7 +1,7 @@
 <!--
  * @Author: MarioGo
  * @Date: 2021-08-21 21:44:34
- * @LastEditTime: 2021-08-21 23:35:16
+ * @LastEditTime: 2021-08-22 10:39:36
  * @LastEditors: MarioGo
  * @Description: 审批
  * @FilePath: /manager-fe/src/views/Leave.vue
@@ -88,6 +88,7 @@
                   v-model="leaveForm.startTime"
                   type="date"
                   placeholder="选择开始时间"
+                  @change="(val) => handleDateChange('startTime')"
                 />
               </el-form-item>
             </el-col>
@@ -98,6 +99,7 @@
                   v-model="leaveForm.endTime"
                   type="date"
                   placeholder="选择结束时间"
+                  @change="(val) => handleDateChange('endTime')"
                 />
               </el-form-item>
             </el-col>
@@ -222,16 +224,16 @@ export default {
           },
         ],
         startTime: [
-          { required: true, message: "请选择开始时间", trigger: "blur" },
+          { type: "date", required: true, message: "请选择开始时间", trigger: "change" },
         ],
         endTime: [
-          { required: true, message: "请选择结束时间", trigger: "blur" },
+          { type: "date", required: true, message: "请选择结束时间", trigger: "change" },
         ],
         reasons: [
           {
             required: true,
             message: "请输入休假原因",
-            trigger: "blur",
+            trigger: ["blur", "change"],
           },
         ],
       },
@@ -252,6 +254,21 @@ export default {
         console.log('error :>> ', error);
       }
 
+    },
+    //日期选择
+    handleDateChange(key,value){
+      let {startTime,endTime} = this.leaveForm
+      if(!startTime || !endTime) return
+      if(startTime > endTime){
+        this.$toast.error('初始时间不能大于结束日期')
+        this.leaveForm.leaveTime = "0天"
+        setTimeout(() => {
+           this.leaveForm[key] = ""
+        }, 400);
+       
+      }else{
+         this.leaveForm.leaveTime = (endTime - startTime) / (24*60*60*1000) +1+ "天"
+      }
     },
     //创建
     handleCreate () {
@@ -291,9 +308,13 @@ export default {
     handleSubmit () {
       this.$refs.dialogForm.validate(async (valid) => {
         if (valid) {
-           //todo:to do something
+          let params = { ...this.leaveForm, action: this.action }
+          let res = await this.$api.leaveOperate(params)
+          this.$toast.success('创建成功')
+          this.handleClose()
+          this.getLeaveList()
         } else {
-
+          this.$toast.error('创建失败')
         }
       })
     }

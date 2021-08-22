@@ -32,7 +32,7 @@ export default {
   //用户列表
   getUserList(params) {
     return request({
-      url: '/users/UserList',
+      url: '/users/userList',
       method: 'get',
       data: params,
       mock: false,
@@ -126,6 +126,14 @@ export default {
     return request({
       url: '/leave/leaveList',
       method: 'get',
+      data: params,
+      mock: true,
+    });
+  },
+  leaveOperate(params){
+    return request({
+      url: '/leave/leaveOperate',
+      method: 'post',
       data: params,
       mock: true,
     });
