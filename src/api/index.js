@@ -8,7 +8,7 @@ export default {
       url: '/login',
       method: 'post',
       data: params,
-      mock:false
+      mock: false,
     });
   },
   //消息数量
@@ -17,13 +17,13 @@ export default {
       url: '/leave/noticeCount',
       method: 'get',
       data: {},
-      mock: true,
+      mock: false,
     });
   },
   //侧边栏菜单
   getMenuList() {
     return request({
-      url: '/menu/MenuList',
+      url: '/menu/menuList',
       method: 'get',
       data: {},
       mock: true,
@@ -48,10 +48,19 @@ export default {
   },
   userDel(params) {
     return request({
-      url: '/users/UserDelete',
+      url: '/users/userDelete',
       method: 'post',
       data: params,
-      // mock:true
+      mock: false,
+    });
+  },
+  //根据角色获取权限列表
+  getPermissionList(params) {
+    return request({
+      url: '/users/permissionList',
+      method: 'get',
+      data: params,
+      mock: false,
     });
   },
   getRoleAllList() {
@@ -91,7 +100,7 @@ export default {
   },
   userSubmit(params) {
     return request({
-      url: '/users/UsersOperate',
+      url: '/users/usersOperate',
       method: 'post',
       data: params,
       mock: false,
@@ -99,7 +108,7 @@ export default {
   },
   menuSubmit(params) {
     return request({
-      url: '/menu/MenuOperate',
+      url: '/menu/menuOperate',
       method: 'post',
       data: params,
       mock: true,
@@ -122,7 +131,7 @@ export default {
     });
   },
   //休假列表
-  getApplyList(params){
+  getApplyList(params) {
     return request({
       url: '/leave/leaveList',
       method: 'get',
@@ -130,12 +139,12 @@ export default {
       mock: false,
     });
   },
-  leaveOperate(params){
+  leaveOperate(params) {
     return request({
       url: '/leave/leaveOperate',
       method: 'post',
       data: params,
       mock: false,
     });
-  }
+  },
 };

@@ -257,7 +257,7 @@ export default {
     //请求用户列表
     this.getUserList()
     this.getDeptList()
-    this.roleList = [{ _id: "001", roleName: "总监" }, { _id: "002", roleName: "JAVA" }, { _id: "003", roleName: "运营" },];
+    this.getRoleAllList() 
   },
   methods: {
     //获取部门列表
@@ -284,6 +284,11 @@ export default {
         console.log('getUserList-error', error);
       }
 
+    },
+     // 角色列表查询
+    async getRoleAllList  (){
+      let list = await this.$api.getRoleAllList()
+      this.roleList = list
     },
     //查询
     handleQuery () {
@@ -316,7 +321,7 @@ export default {
       await this.$api.userDel({
         userIds: [row.userId], //可单个删除，也可批量删除
       });
-      this.$message.success("删除成功");
+      this.$toast.success("删除成功");
       this.getUserList();
     },
     //新增
@@ -328,17 +333,17 @@ export default {
 
     async handlePatchDel (row) {
       if (this.checkedUserIds.length == 0) {
-        this.$message.error("请选择要删除的用户");
+        this.$toast.error("请选择要删除的用户");
         return;
       }
       const res = await this.$api.userDel({
         userIds: this.checkedUserIds, //可单个删除，也可批量删除
       });
       if (res.nModified > 0) {
-        this.$message.success("删除成功");
+        this.$toast.success("删除成功");
         this.getUserList();
       } else {
-        this.$message.success("修改失败");
+        this.$toast.success("修改失败");
       }
 
     },
@@ -356,7 +361,7 @@ export default {
           params.action = this.action;
           let res = await this.$api.userSubmit(params);
           this.showModal = false;
-          this.$message.success("用户创建成功");
+          this.$toast.success("用户创建成功");
           this.handleReset("dialogForm");
           this.getUserList();
         }
