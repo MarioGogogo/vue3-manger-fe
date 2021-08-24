@@ -198,7 +198,7 @@ export default {
     // 菜单权限列表初始化
     async getMenuList () {
       try {
-        let {list} = await this.$api.getMenuList() // { list,page } 解构
+        let list = await this.$api.getMenuList() // { list,page } 解构
         this.menuList = list
         this.getActionMap(list)
       } catch (e) {
