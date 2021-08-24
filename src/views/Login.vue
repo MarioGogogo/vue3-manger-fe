@@ -74,7 +74,6 @@ export default {
               this.$store.commit("saveUserInfo", res);
               this.$router.push("/welcome");
           } catch (error) {
-            this.$message.error(error);
              this.loading = false
           }
 

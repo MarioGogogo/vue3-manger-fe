@@ -26,7 +26,7 @@ export default {
       url: '/menu/menuList',
       method: 'get',
       data: {},
-      mock: true,
+      mock: false,
     });
   },
   //用户列表
@@ -106,12 +106,13 @@ export default {
       mock: false,
     });
   },
+  //菜单管理操作
   menuSubmit(params) {
     return request({
       url: '/menu/menuOperate',
       method: 'post',
       data: params,
-      mock: true,
+      mock: false,
     });
   },
   roleOperate(params) {
