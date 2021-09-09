@@ -1,7 +1,7 @@
 /*
  * @Author: MarioGo
  * @Date: 2021-07-27 00:26:04
- * @LastEditTime: 2021-08-24 23:37:50
+ * @LastEditTime: 2021-08-24 23:40:11
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/main.js
@@ -57,17 +57,12 @@ app.directive('has', {
     let value = binding.value;
     //判断列表中是否有对应的按钮权限标识
     let hasPermission = userAction.includes(value);
-    console.log(
-      '%c 🍞 hasPermission: ',
-      'font-size:20px;background-color: #ED9EC7;color:#fff;',
-      hasPermission
-    );
     if (!hasPermission) {
       el.style = 'disply:none';
       setTimeout(() => {
-        //执行到这里 dom还没有被渲染到节点需要等一下
+        //执行到这里 vdom还没有被渲染到节点需要等一下
         el.parentNode.removeChild(el);
-      });
+      },0);
     }
   },
 });

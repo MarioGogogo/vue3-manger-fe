@@ -2,7 +2,7 @@
   <div class="login-wrapper">
     <div class="modal">
       <el-form ref="userForm" :model="user" status-icon :rules="rules">
-        <div class="title">暴力熊</div>
+        <div class="title">🐻 暴力熊</div>
         <!-- 账号 -->
         <el-form-item prop="userName">
           <el-input

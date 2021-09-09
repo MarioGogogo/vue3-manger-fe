@@ -54,6 +54,14 @@ const routes = [
         component: () => import('@/views/Dept.vue'),
       },
       {
+        name: 'appconfig',
+        path: '/system/appconfig',
+        meta: {
+          title: 'App设置',
+        },
+        component: () => import('@/views/AppConfig.vue'),
+      },
+      {
         name: 'leave',
         path: '/audit/leave',
         meta: {
