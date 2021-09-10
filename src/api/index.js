@@ -149,4 +149,38 @@ export default {
       mock: false,
     });
   },
+  //文件上传
+  uploadFile(formData) {
+    return request({
+      url: '/file/uploadFile',
+      method: 'post',
+      data: formData,
+      mock: false,
+    });
+  },
+  // 文件操作
+  fileOperate(params) {
+    return request({
+      url: '/file/fileOperate',
+      method: 'post',
+      data: params,
+      mock: false,
+    });
+  },
+  getAppList() {
+    return request({
+      url: '/file/appList',
+      method: 'get',
+      data: '',
+      mock: false,
+    });
+  },
+  getImageList(params){
+    return request({
+      url: '/qiniu/getImageList',
+      method: 'get',
+      data: params,
+      mock: false,
+    });
+  }
 };

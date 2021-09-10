@@ -68,6 +68,14 @@ const routes = [
           title: '休假申请',
         },
         component: () => import('@/views/Leave.vue'),
+      },
+      {
+        name: 'image',
+        path: '/qiniu/image',
+        meta: {
+          title: '空间管理',
+        },
+        component: () => import('@/views/Image.vue'),
       }
     ],
   },

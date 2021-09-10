@@ -9,6 +9,7 @@
   "dependencies": {
     "axios": "^0.21.1",
     "element-plus": "^1.0.2-beta.62",
+    "spark-md5": "^3.0.2",
     "vue": "^3.0.5",
     "vue-router": "^4.0.10",
     "vue-toastification": "^2.0.0-rc.1",

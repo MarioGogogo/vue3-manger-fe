@@ -1,4 +1,13 @@
 /*
+ * @Author: MarioGo
+ * @Date: 2021-07-27 22:13:17
+ * @LastEditTime: 2021-09-10 18:30:49
+ * @LastEditors: MarioGo
+ * @Description: 文件描述
+ * @FilePath: /manager-fe/src/utils/request.js
+ * 可以输入预定的版权声明、个性签名、空行等
+ */
+/*
  * axios二次封装
  */
 
@@ -83,7 +92,7 @@ function request(options) {
 }
 
 ['get', 'post', 'put', 'delete', 'patch'].forEach((item) => {
-  request[item] = (url, data, options) => {
+  request[item] = (url, data, fn, options) => {
     return request({
       url,
       data,
