@@ -1,7 +1,7 @@
 <!--
  * @Author: MarioGo
  * @Date: 2021-09-10 23:59:04
- * @LastEditTime: 2021-09-11 01:35:11
+ * @LastEditTime: 2021-09-11 20:53:09
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/views/Image.vue
@@ -12,6 +12,13 @@
     <!-- 头部搜索 -->
     <div class="query-form">
       <el-form ref="form" :inline="true" :model="queryForm">
+        <el-form-item label="七牛云空间">
+          <el-select v-model="queryForm.spaceKey">
+            <el-option :value="'h5monkey'" label="h5monkey"></el-option>
+            <el-option :value="'book'" label="book"></el-option>
+            <el-option :value="'mall'" label="mall"></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="图片名称" prop="imageName">
           <el-input
             v-model="queryForm.imageName"
@@ -34,7 +41,7 @@
           <template #default="scope">
             <el-image
               style="width: 80px; height: 80px"
-              :src="'http://pp.52react.cn/' + scope.row.key"
+              :src="spaceUrl + scope.row.key"
               fit="fit"
             >
               <template #placeholder>
@@ -59,7 +66,7 @@
             <el-button
               type="danger"
               size="mini"
-              @click="handleDel(scope.row._id)"
+              @click="handleDel(scope.row.key)"
               >删除</el-button
             >
           </template>
@@ -74,60 +81,57 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <el-dialog title="用户新增" v-model="showModal">
+    <el-dialog title="上传图片" v-model="showModal">
       <el-form
         ref="dialogForm"
         :model="imageForm"
         label-width="100px"
         :rules="rules"
       >
-        <el-form-item label="角色名称" prop="imageName">
+        <el-form-item label="图片前缀" prop="beforeName">
           <el-input
-            v-model="imageForm.imageName"
-            placeholder="请输入角色名称"
+            v-model="imageForm.beforeName"
+            placeholder="请输入图片名称前缀(方便统一管理 比如 foxhis_)"
           />
         </el-form-item>
-        <el-form-item label="备注" prop="remark">
-          <el-input
-            type="textarea"
-            :rows="2"
-            v-model="imageForm.remark"
-            placeholder="请输入备注"
-          />
+        <el-form-item label="上传图片">
+          <el-upload
+            ref="upload"
+            class="upload-demo"
+            :auto-upload="false"
+            drag
+            action=""
+            accept=".jpg,.png"
+            :limit="limit"
+            :on-remove="handleRemove"
+            :on-change="handleOnChange"
+            :file-list="fileList"
+            multiple
+          >
+            <i class="el-icon-upload"></i>
+            <div class="el-upload__text">
+              将文件拖到此处，或<em>点击上传</em>
+            </div>
+            <template #tip>
+              <div class="el-upload__tip">
+                只能上传 jpg/png 文件，且不超过2M 最多上传5张
+              </div>
+            </template>
+          </el-upload>
+          <!-- 进度条 -->
+          <el-progress
+            v-show="uploadFlag"
+            :percentage="fileUploadPercent"
+            :status="fileUploadPercent === 100 ? 'success' : null"
+            style="width: 300px"
+          ></el-progress>
         </el-form-item>
       </el-form>
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-          <el-button type="primary" @click="handleSubmit">确 定</el-button>
-        </span>
-      </template>
-    </el-dialog>
-    <!-- 权限弹窗内容 -->
-    <el-dialog title="权限设置" v-model="showPermission">
-      <el-form label-width="100px">
-        <el-form-item label="角色名称">
-          {{ curimageName }}
-        </el-form-item>
-        <!-- 树形 -->
-        <el-form-item label="选择权限">
-          <el-tree
-            ref="permissionTree"
-            :data="menuList"
-            show-checkbox
-            node-key="_id"
-            default-expand-all
-            :props="{ label: 'menuName' }"
-          >
-          </el-tree>
-        </el-form-item>
-      </el-form>
-      <template #footer>
-        <span class="dialog-footer">
-          <el-button @click="showPermission = false">取 消</el-button>
-          <el-button type="primary" @click="handlePermissionSubmit"
-            >确 定</el-button
-          >
+           <el-button type="primary" @click="handleOnlyOneSubmit">单张图片上传</el-button>
+          <el-button type="primary" @click="handleSubmit">多张图片上传</el-button>
         </span>
       </template>
     </el-dialog>
@@ -136,14 +140,23 @@
 
 <script>
 import utils from '../utils/utils'
+import axios from "axios"
 export default {
   name: "image",
   data () {
     return {
+      limit: 5,
+      uploadFlag: false,
+      fileUploadPercent: 0,
       queryForm: {
+        spaceKey: "mall",//默认空间
         imageName: ""
       },
+      fileList: [],  //上传图片数量
       imageList: [],
+      formData: {
+
+      },
       columns: [
         {
           label: '图片预览',
@@ -166,9 +179,6 @@ export default {
         {
           label: '创建时间',
           prop: 'ctime',
-          formatter (row, column, value) {
-            return utils.formateDate(new Date(value))
-          }
         }
       ],
       pager: {
@@ -177,7 +187,9 @@ export default {
       },
       showModal: false,
       action: 'create',
-      imageForm: {},
+      imageForm: {
+        beforeName: ""
+      },
       rules: {
         imageName: {
           required: true,
@@ -204,45 +216,140 @@ export default {
           ...this.queryForm,
           ...this.pager
         })
-
         this.imageList = res.list
+        this.spaceUrl = this.getSpaceUrl()
+
         // this.pager.total = page.total
       } catch (e) {
         throw new Error(e)
       }
     },
+    getSpaceUrl () {
+      switch (this.queryForm.spaceKey) {
+        case "h5monkey":
+          return "http://pp.52react.cn/"
+          break;
+        case "mall":
+          return 'http://imagemall.52react.cn/'
+          break;
+        case "book":
+          return 'http://book.52react.cn/'
+          break;
+        default:
+          return ''
+          break;
+      }
+    },
 
-    // 表单重置
+    // 删除
+    handleRemove (file, fileList) {
+      //多个文件移除   file.raw 才是真实的 file 对象
+      this.fileList.splice(this.fileList.indexOf(file.raw), 1)
+    },
+    //文件上传本地 钩子
+    handleOnChange (file, fileList) {
+      const isImage = file.name.split(".").pop()
+      console.log('%c 🌶 isImage: ', 'font-size:20px;background-color: #465975;color:#fff;', isImage);
+      if (isImage !== "jpg" && isImage !== "png" && isImage !== "jpeg") {
+        return this.$toast.error('上传图片只能是 jpg png 格式!')
+      }
+      const isLt2M = (file.size / 1024 / 1024) < 10
+      if (!isLt2M) {
+        return this.$toast.error('上传文件大小不能超过 2MB!')
+      }
+  
+      //验证通过之后，将缓存区文件存入上传区文件中
+      this.fileList.push({ name: file.name, file: file.raw });
+        console.log('%c 🍶 file, fileList: ', 'font-size:20px;background-color: #2EAFB0;color:#fff;',this.fileList);
+    },
+    // 图片重置
     handleRest (form) {
       this.$refs[form].resetFields()
     },
-    // 角色添加
+    // 图片添加
     handleAdd (type, row) {
       this.action = 'create'
       this.showModal = true
     },
-    //角色编辑
-    handleEdit (row) {
-      this.action = 'edit'
-      this.showModal = true
-      this.$nextTick(() => {
-        this.imageForm = { _id: row._id, imageName: row.imageName, remark: row.remark }
+
+
+    // 上传服务器
+    async submitUpload (files) {
+      const _this = this
+      let formData = new FormData();
+      // 向 formData 对象中添加文件
+      this.fileList.forEach(item => {
+        formData.append('file', item.file)
+      })
+      formData.append('spaceKey', this.queryForm.spaceKey);
+      formData.append('imageName', this.imageForm.beforeName);
+      //设置文件保存路径
+      // formData.append('path', this.path);
+      axios({
+        url: "http://localhost:8080/api/qiniu/uploadQiniuImage",
+        // url: "http://localhost:8080/api/file/uploadMoreFile",
+        method: 'post',
+        data: formData,
+        headers: {
+        },
+        //原生获取上传进度的事件
+        onUploadProgress: function (progressEvent) {
+          let complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+          _this.uploadFlag = true
+          _this.fileUploadPercent = complete;
+          console.log('上传 ' + complete)
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data && res.data.data && res.data.code === 200) {
+          this.$toast.success("上传成功")
+          this.handleClose()
+          this.getImageList()
+        }
+      }).catch(err => {
+        console.log(err)
       })
 
     },
-    // 角色提交
+
+
+  handleOnlyOneSubmit(){
+ const _this = this
+      let formData = new FormData();
+      formData.append('file', this.fileList[0].file)
+      formData.append('spaceKey', this.queryForm.spaceKey);
+      formData.append('imageName', this.imageForm.beforeName);
+      //设置文件保存路径
+      // formData.append('path', this.path);
+      axios({
+        url: "http://localhost:8080/api/qiniu/uploadByOneQiniuImage",
+        method: 'post',
+        data: formData,
+        headers: {
+        },
+        //原生获取上传进度的事件
+        onUploadProgress: function (progressEvent) {
+          let complete = (progressEvent.loaded / progressEvent.total * 100 | 0)
+          _this.uploadFlag = true
+          _this.fileUploadPercent = complete;
+          console.log('上传 ' + complete)
+        }
+      }).then(res => {
+        if (res.status === 200 && res.data && res.data.data && res.data.code === 200) {
+          this.$toast.success("上传成功")
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+
+
+  },
+
+   
+    // 图片提交
     handleSubmit () {
       this.$refs.dialogForm.validate(async (valid) => {
         if (valid) {
-          let { imageForm, action } = this // 解构 imageForm, action
-          let params = { ...imageForm, action }
-          let res = await this.$api.imageOperate(params)
-          if (res) {
-            this.showModal = false
-            this.$toast.success('创建成功')
-            this.handleRest('dialogForm')
-            this.getImageList()
-          }
+          this.submitUpload(this.formData.files) // 调用文件上传方法
         }
       })
     },
@@ -264,10 +371,17 @@ export default {
       })
     },
     // 角色删除
-    async handleDel (_id) {
-      await this.$api.imageOperate({ _id, action: 'delete' })
-      this.$toast.success('删除成功')
-      this.getImageList()
+    async handleDel (key) {
+      const params = {
+        spaceKey: this.queryForm.spaceKey,
+        fileName: key
+      }
+      const res = await this.$api.deleteImage(params)
+      console.log('%c 🍬 删除成功: ', 'font-size:20px;background-color: #93C0A4;color:#fff;', res);
+      if (res.data.size === 0) {
+        this.$toast.success('删除成功')
+        this.getImageList()
+      }
     },
     //分页请求
     handleCurrentChange (current) {

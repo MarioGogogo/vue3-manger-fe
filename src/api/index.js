@@ -182,5 +182,21 @@ export default {
       data: params,
       mock: false,
     });
-  }
+  },
+  deleteImage(params){
+    return request({
+      url: '/qiniu/deleteImage',
+      method: 'post',
+      data: params,
+      mock: false,
+    });
+  },
+  uploadImages(formData) {
+    return request({
+      url: '/file/uploadImages',
+      method: 'post',
+      data: formData,
+      mock: false,
+    });
+  },
 };
