@@ -1,7 +1,9 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import Home from '@/components/Home.vue';
 import storage from '../utils/storage';
-import api from '../api';
+import API from '../api';
+import utils from '../utils/utils'
+
 
 const routes = [
   {
@@ -70,6 +72,14 @@ const routes = [
         component: () => import('@/views/Leave.vue'),
       },
       {
+        name: 'approval',
+        path: '/audit/approval',
+        meta: {
+          title: '待我审批',
+        },
+        component: () => import('@/views/Approval.vue '),
+      },
+      {
         name: 'image',
         path: '/qiniu/image',
         meta: {
@@ -96,44 +106,82 @@ const routes = [
     component: () => import('@/views/404.vue'),
   },
 ];
+
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
-});
+  routes
+})
+
+// 判断当前地址是否可以访问
+function checkPermission(path) {
+  let hasPermission = router
+    .getRoutes()
+    .filter((route) => route.path === path).length
+  if (hasPermission) {
+    return true
+  }
+  return false
+}
 
 async function loadAsyncRoutes() {
-  return;
-  let userInfo = storage.getItem('userInfo') || {};
+  let userInfo = storage.getItem('userInfo') || {}
+  console.log(userInfo, '==>>>userInfo')
   if (userInfo.token) {
-    try {
-      const { menuList } = await API.getPermissionList();
-      let routes = utils.generateRoute(menuList);
-      routes.map((route) => {
-        let url = `./../views/${route.component}.vue`;
-        route.component = () => import(url);
-        router.addRoutes('home', route);
-      });
-    } catch (error) {
-      console.log(
-        '%c 🍎 动态路径: ',
-        'font-size:20px;background-color: #4b4b4b;color:#fff;',
-        error
-      );
-    }
+    const { menuList } = await API.getPermissionList()
+    console.log(menuList, '====>>>>menuList')
+    // const menuList = storage.getItem('menuList') || []
+    // let routes = utils.generateRoute(JSON.parse(JSON.stringify(menuList)))
+    let routes = utils.generateRoute(JSON.parse(JSON.stringify(menuList)))
+    vueRouters(routes)
+    // await vueRouters(routes)
+    // routes.map((route) => {
+    //   let url = `../views/${route.component}.vue`
+    //   route.component = () => import(url)
+    //   router.addRoute('home', route)
+    // })
   }
 }
+
+loadAsyncRoutes()
 // await loadAsyncRoutes()
+// ;(async () => {
+//   try {
+//     await loadAsyncRoutes()
+//   } catch (error) {
+//     console.log('err is ->', error)
+//   }
+// })()
+
+// async function vueRouters(routes) {
+function vueRouters(routes) {
+  const modules = import.meta.glob('../views/**/*.vue')
+  const components = import.meta.globEager('../views/**/*.vue')
+  Object.keys(modules).forEach((key) => {
+    const viewSrc = components[key]
+    const file = viewSrc.default
+    // const file = key.default
+    // if (!file.isRouter) return exist
+    // 首字母转小写 letterToLowerCase 首字母转大写 letterToUpperCase
+    let isExistRoute = routes.find((item) => item.name === file.name)
+    if (!isExistRoute) return
+    router.addRoute('home', {
+      path: isExistRoute.path,
+      name: isExistRoute.name,
+      meta: isExistRoute.meta,
+      component: modules[key]
+    })
+  })
+}
+
 // 导航守卫
-router.beforeEach((to, from, next) => {
-  //判断当前路由是否存在
-  if (router.hasRoute(to.name)) {
-    document.title = to.meta.title;
-    next();
+router.beforeEach(async (to, from, next) => {
+  // 判断
+  if (checkPermission(to.path)) {
+    document.title = to.meta.title
+    next()
   } else {
-    next('/404');
+    next('/404')
   }
-});
+})
 
-export default router;
-
-// TODO 权限需要导航守卫
+export default router

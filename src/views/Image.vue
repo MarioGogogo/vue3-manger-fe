@@ -1,7 +1,7 @@
 <!--
  * @Author: MarioGo
  * @Date: 2021-09-10 23:59:04
- * @LastEditTime: 2021-09-11 20:53:09
+ * @LastEditTime: 2021-09-11 23:17:17
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/views/Image.vue
@@ -130,8 +130,12 @@
       <template #footer>
         <span class="dialog-footer">
           <el-button @click="handleClose">取 消</el-button>
-           <el-button type="primary" @click="handleOnlyOneSubmit">单张图片上传</el-button>
-          <el-button type="primary" @click="handleSubmit">多张图片上传</el-button>
+          <el-button type="primary" @click="handleOnlyOneSubmit"
+            >单张图片上传</el-button
+          >
+          <el-button type="primary" @click="handleSubmit"
+            >多张图片上传</el-button
+          >
         </span>
       </template>
     </el-dialog>
@@ -195,14 +199,7 @@ export default {
           required: true,
           message: '请输入角色名称'
         }
-      },
-      // 权限展示
-      showPermission: false,
-      curimageId: "",
-      curimageName: "",
-      menuList: [],
-      // 菜单映射表
-      actionMap: {}
+      }
     }
   },
   mounted () {
@@ -257,10 +254,10 @@ export default {
       if (!isLt2M) {
         return this.$toast.error('上传文件大小不能超过 2MB!')
       }
-  
+
       //验证通过之后，将缓存区文件存入上传区文件中
       this.fileList.push({ name: file.name, file: file.raw });
-        console.log('%c 🍶 file, fileList: ', 'font-size:20px;background-color: #2EAFB0;color:#fff;',this.fileList);
+      console.log('%c 🍶 file, fileList: ', 'font-size:20px;background-color: #2EAFB0;color:#fff;', this.fileList);
     },
     // 图片重置
     handleRest (form) {
@@ -311,9 +308,8 @@ export default {
 
     },
 
-
-  handleOnlyOneSubmit(){
- const _this = this
+    handleOnlyOneSubmit () {
+      const _this = this
       let formData = new FormData();
       formData.append('file', this.fileList[0].file)
       formData.append('spaceKey', this.queryForm.spaceKey);
@@ -342,9 +338,9 @@ export default {
       })
 
 
-  },
+    },
 
-   
+
     // 图片提交
     handleSubmit () {
       this.$refs.dialogForm.validate(async (valid) => {
@@ -356,6 +352,9 @@ export default {
     // 弹框关闭
     handleClose () {
       this.handleRest('dialogForm')
+      this.uploadFlag = false
+      this.fileUploadPercent = 0
+      this.fileList = []
       this.showModal = false
     },
     handleOpenPermission (row) {

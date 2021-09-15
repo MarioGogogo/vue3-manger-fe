@@ -175,7 +175,7 @@ export default {
       mock: false,
     });
   },
-  getImageList(params){
+  getImageList(params) {
     return request({
       url: '/qiniu/getImageList',
       method: 'get',
@@ -183,12 +183,30 @@ export default {
       mock: false,
     });
   },
-  deleteImage(params){
+  deleteImage(params) {
     return request({
       url: '/qiniu/deleteImage',
       method: 'post',
       data: params,
       mock: false,
+    });
+  },
+  // 审批列表
+  getLeaveList(params) {
+    return request({
+      url: '/leave/leaveList',
+      method: 'get',
+      data: params,
+      mock: false,
+    });
+  },
+
+  // 审核操作
+  leaveApprove(params) {
+    return request({
+      url: '/leave/leaveApprove',
+      method: 'post',
+      data: params,
     });
   },
   uploadImages(formData) {
