@@ -1,10 +1,10 @@
 /*
  * @Author: MarioGo
  * @Date: 2021-07-27 21:19:57
- * @LastEditTime: 2021-09-09 20:33:15
+ * @LastEditTime: 2021-09-22 19:39:47
  * @LastEditors: MarioGo
  * @Description: 文件描述
- * @FilePath: /manager-fe/src/router/index.js
+ * @FilePath: /manager-fe/src/router/index_bak.js
  * 可以输入预定的版权声明、个性签名、空行等
  */
 import { createRouter, createWebHashHistory } from 'vue-router'
@@ -68,6 +68,7 @@ function checkPermission(path) {
 
 async function loadAsyncRoutes() {
   let userInfo = storage.getItem('userInfo') || {}
+  //第一次登录观察是否有token
   if (userInfo.token) {
     const { menuList } = await API.getPermissionList()
     let routes = utils.generateRoute(JSON.parse(JSON.stringify(menuList)))

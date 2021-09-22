@@ -1,7 +1,7 @@
 /*
  * @Author: MarioGo
  * @Date: 2021-07-28 23:01:24
- * @LastEditTime: 2021-08-24 23:05:58
+ * @LastEditTime: 2021-09-22 22:29:29
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/store/index.js
@@ -18,6 +18,7 @@ const state = {
   userInfo:  storage.getItem('userInfo') || {}, // 获取用户信息
   menuList:  storage.getItem('menuList') || [], // 获取菜单列表
   actionList:  storage.getItem('actionList') || [], // 获取菜单按钮
+  noticeCount:0
 };
 
 export default createStore({

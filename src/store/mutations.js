@@ -1,7 +1,7 @@
 /*
  * @Author: MarioGo
  * @Date: 2021-07-28 23:06:47
- * @LastEditTime: 2021-08-24 23:08:19
+ * @LastEditTime: 2021-09-22 22:32:54
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/store/mutations.js
@@ -24,6 +24,10 @@ export default {
   saveActionList(state, actionList) {
     state.actionList = actionList;
     storage.setItem('actionList', actionList);
+  },
+  saveNoticeCount(state, noticeCount) {
+    console.log('%c 🍢 vuex保存: ', 'font-size:20px;background-color: #F5CE50;color:#fff;');
+    state.noticeCount = noticeCount;
   },
   
 };

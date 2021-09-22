@@ -32,9 +32,10 @@
         <div class="user-info">
           🌈
           <el-badge
-            :is-dot="noticeCount > 0 ? true : false"
+            :value="noticeCount === 0 ? null : noticeCount"
             class="notice"
             type="danger"
+            @click='noticeCount !== 0 && $router.push("/audit/approval")'
           >
             <i class="el-icon-bell"></i>
           </el-badge>
@@ -80,6 +81,12 @@ export default {
     this.getNoticeCount();
     this.getMenuList();
   },
+  computed: {
+    noticeCount() {
+      console.log('%c 🍝 noticeCount: ', 'font-size:20px;background-color: #EA7E5C;color:#fff;');
+      return this.$store.state.noticeCount; 
+    }
+  },
   methods: {
     toggle () {
       this.isCollapse = !this.isCollapse;
@@ -93,8 +100,9 @@ export default {
     async getNoticeCount () {
       try {
         const count = await this.$api.noticeCount();
-        console.log('%c 🍦 count: ', 'font-size:20px;background-color: #ED9EC7;color:#fff;', count);
-        this.noticeCount = count;
+        //保存提醒条数
+        console.log('%c 🍪 保存提醒条数: ', 'font-size:20px;background-color: #E41A6A;color:#fff;');
+        this.$store.commit('saveNoticeCount', count)
       } catch (error) {
         console.error(error);
       }
@@ -195,6 +203,7 @@ export default {
       }
       .user-info {
         .notice {
+          cursor: pointer;
           line-height: 30px;
           margin-right: 15px;
         }

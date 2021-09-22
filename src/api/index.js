@@ -204,9 +204,10 @@ export default {
   // 审核操作
   leaveApprove(params) {
     return request({
-      url: '/leave/leaveApprove',
+      url: '/approve/approveOperate',
       method: 'post',
       data: params,
+      mock: false,
     });
   },
   uploadImages(formData) {

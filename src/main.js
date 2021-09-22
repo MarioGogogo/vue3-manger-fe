@@ -1,7 +1,7 @@
 /*
  * @Author: MarioGo
  * @Date: 2021-07-27 00:26:04
- * @LastEditTime: 2021-08-24 23:40:11
+ * @LastEditTime: 2021-09-22 19:43:05
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/main.js
@@ -73,4 +73,7 @@ app.config.globalProperties.$toast = useToast();
 app.config.globalProperties.$request = request;
 app.config.globalProperties.$api = api;
 app.config.globalProperties.$storage = storage;
+
+console.log('%c 🍸 app.use: ', 'font-size:20px;background-color: #F5CE50;color:#fff;');
 app.use(router).use(store).use(ElementPlus, { size: 'small' }).mount('#app');
+

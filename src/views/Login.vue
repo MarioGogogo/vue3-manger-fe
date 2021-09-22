@@ -60,13 +60,13 @@ export default {
   },
   methods: {
     login () {
-      
       this.$refs.userForm.validate(async valid => {
         if (valid) {
           // 校验成功！
           this.loading = true
           try {
             const res = await this.$api.login(this.user)
+            res.createTime = new Date().getTime();
             this.loading = false
             if (res === undefined) {
               return  // this.$message.error("网络请求异常，请稍后再试");

@@ -125,8 +125,18 @@ function checkPermission(path) {
 
 async function loadAsyncRoutes() {
   let userInfo = storage.getItem('userInfo') || {}
+
   console.log(userInfo, '==>>>userInfo')
   if (userInfo.token) {
+    //是否超时
+    const now = new Date().getTime();
+    const diffTime = now - userInfo.createTime
+    //bug:无法返回登录页
+    if(diffTime > 1000 * 60 *60 *24){
+       localStorage.removeItem('manager');
+       router.push('/login');
+       return
+    }
     const { menuList } = await API.getPermissionList()
     console.log(menuList, '====>>>>menuList')
     // const menuList = storage.getItem('menuList') || []
