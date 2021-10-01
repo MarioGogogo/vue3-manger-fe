@@ -2,7 +2,13 @@
   <div class="user-manage">
     <!-- 筛选区域 -->
     <div class="query-form">
-      <el-form ref="form" :inline="true" :model="user">
+      <query-form
+        :form="form"
+        v-model="user"
+        @handleQuery="handleQuery"
+        @handleReset="handleReset"
+      />
+      <!-- <el-form ref="form" :inline="true" :model="user">
         <el-form-item label="用户ID" prop="userId">
           <el-input v-model="user.userId" placeholder="请输入用户ID" />
         </el-form-item>
@@ -21,7 +27,7 @@
           <el-button type="primary" @click="handleQuery">查询</el-button>
           <el-button @click="handleReset('form')">重置</el-button>
         </el-form-item>
-      </el-form>
+      </el-form> -->
     </div>
     <!-- 列表区域 -->
     <div class="base-table">
@@ -153,9 +159,6 @@
   </div>
 </template>
 
-
-
-
 <script>
 import utils from "./../utils/utils";
 export default {
@@ -267,6 +270,43 @@ export default {
             return utils.formateDate(new Date(value));
           },
         },
+      ],
+      form =[
+        {
+          type: "input",
+          label: "用户ID",
+          model: "userId",
+          placeholder: "请输入用户ID"
+
+        },
+        {
+          type: "input",
+          label: "用户名称",
+          model: "userName",
+          placeholder: "请输入用户名称"
+
+        },
+        {
+          type: "select",
+          label: "状态",
+          model: "state",
+          placeholder: "请选择状态",
+          options: [
+            {
+              label: "在职",
+              value: 1
+            },
+            {
+              label: "离职",
+              value: 2
+            },
+            {
+              label: "试用期",
+              value: 3
+            }
+          ]
+
+        }
       ]
     }
   },
@@ -308,7 +348,8 @@ export default {
       this.roleList = list
     },
     //查询
-    handleQuery () {
+    handleQuery (value) {
+      console.log('%c 🍌 handleQuery: ', 'font-size:20px;background-color: #3F7CFF;color:#fff;', value);
       this.getUserList();
     },
     // 重置

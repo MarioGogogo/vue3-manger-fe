@@ -1,7 +1,7 @@
 /*
  * @Author: MarioGo
  * @Date: 2021-07-27 00:26:04
- * @LastEditTime: 2021-09-22 19:43:05
+ * @LastEditTime: 2021-10-01 19:11:18
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/src/main.js
@@ -18,6 +18,8 @@ import request from './utils/request';
 import storage from './utils/storage';
 import api from './api';
 import store from './store';
+import QueryForm from '../packages/QueryForm';
+
 console.log(
   '%c 🍍 环境变量: ',
   'font-size:20px;background-color: #3F7CFF;color:#fff;',
@@ -43,11 +45,12 @@ const options = {
 };
 const app = createApp(App);
 
+
 //定义全局指令
 app.directive('has', {
   beforeMount: (el, binding) => {
     console.log(
-      '%c 🍒 el,binding: ',
+      '%c 🍒定义全局指令: ',
       'font-size:20px;background-color: #42b983;color:#fff;',
       el,
       binding
@@ -75,5 +78,5 @@ app.config.globalProperties.$api = api;
 app.config.globalProperties.$storage = storage;
 
 console.log('%c 🍸 app.use: ', 'font-size:20px;background-color: #F5CE50;color:#fff;');
-app.use(router).use(store).use(ElementPlus, { size: 'small' }).mount('#app');
+app.use(router).use(store).use(QueryForm).use(ElementPlus, { size: 'small' }).mount('#app');
 
