@@ -7,8 +7,8 @@
         v-model="user"
         @handleQuery="handleQuery"
         @handleReset="handleReset"
-      />
-      <!-- <el-form ref="form" :inline="true" :model="user">
+      /> 
+    <!-- <el-form ref="form" :inline="true" :model="user">
         <el-form-item label="用户ID" prop="userId">
           <el-input v-model="user.userId" placeholder="请输入用户ID" />
         </el-form-item>
@@ -17,7 +17,6 @@
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-select v-model="user.state" placeholder="请选择状态">
-            <el-option :value="0" label="所有"></el-option>
             <el-option :value="1" label="在职"></el-option>
             <el-option :value="2" label="离职"></el-option>
             <el-option :value="3" label="试用期"></el-option>
@@ -27,7 +26,7 @@
           <el-button type="primary" @click="handleQuery">查询</el-button>
           <el-button @click="handleReset('form')">重置</el-button>
         </el-form-item>
-      </el-form> -->
+      </el-form>  -->
     </div>
     <!-- 列表区域 -->
     <div class="base-table">
@@ -170,7 +169,7 @@ export default {
       user: {
         userId: "",
         userName: "",
-        state: 0,  //必须数字
+        state: 1,  //必须数字
       },
       userList: [],
       roleList: [], //系统角色
@@ -271,7 +270,7 @@ export default {
           },
         },
       ],
-      form =[
+      form :[
         {
           type: "input",
           label: "用户ID",
@@ -334,7 +333,7 @@ export default {
       const params = { ...this.user, ...this.pager }
       try {
         const { list, page } = await this.$api.getUserList(params)
-        console.log('%c 🍠 page: ', 'font-size:20px;background-color: #6EC1C2;color:#fff;', page);
+     
         this.userList = list
         this.pager.total = +page.total
       } catch (error) {
@@ -412,7 +411,7 @@ export default {
     //提交
     async handleSubmit () {
       this.$refs.dialogForm.validate(async (valid) => {
-        console.log('%c 🍢 valid: ', 'font-size:20px;background-color: #42b983;color:#fff;', valid);
+       
         if (valid) {
           let params = this.userForm
           params.userEmail += "@imooc.com";

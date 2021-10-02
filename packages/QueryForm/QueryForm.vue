@@ -1,7 +1,7 @@
 <!--
  * @Author: MarioGo
  * @Date: 2021-10-01 15:50:54
- * @LastEditTime: 2021-10-01 22:33:28
+ * @LastEditTime: 2021-10-02 09:33:51
  * @LastEditors: MarioGo
  * @Description: 文件描述
  * @FilePath: /manager-fe/packages/QueryForm/QueryForm.vue
@@ -10,7 +10,7 @@
 <template>
   <el-form :inline="true" ref="queryForm" :model="queryModel">
     <template v-for="(item, index) in form" :key="index">
-      <form-item :item="item" v-bind="item" v-model="item.model" />
+      <form-item :item="item" v-bind="item" v-model="queryModel[item.model]" />
     </template>
     <el-form-item>
       <el-button @click="handleQuery()" type="primary">查询</el-button>
@@ -28,7 +28,7 @@ import FormItem from './FormItem.vue';
 export default {
   name: "QueryForm",
   props: ["modelValue", "form"],
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue","handleQuery"],
   components: {
     FormItem
   },
@@ -36,18 +36,19 @@ export default {
     const ctx = getCurrentInstance();
     const form = props.form;
     const queryModel = reactive({
-
+      ...props.modelValue
+      
     })
 
     //重置
     const handleRest = () => {
-      ctx.refs.queryForm.restFields()
+      ctx.refs.queryForm.resetFields();
     }
     //查询
     const handleQuery = (value) => {
       //优先执行改变 vmodel   再执行回调函数
-      context.emit("update:modelValue", { userId: 888, userName: "jack" })
-      context.emit("handleQuery", { userId: 888, userName: "jack" })
+      context.emit("update:modelValue", { ...queryModel })
+      context.emit("handleQuery", { ...queryModel })
 
     }
 
